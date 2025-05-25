@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prank Dodging No Button</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Patrick Hand', cursive, sans-serif;
+    background: linear-gradient(135deg, #654ea3, #eaafc8);
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 10px #fff3;
+  }
+  .buttons {
+    display: flex;
+    gap: 3rem;
+    margin-top: 2rem;
+  }
+  button {
+    background-color: #ff6b6b;
+    border: none;
+    border-radius: 12px;
+    padding: 1rem 2.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 15px #ff6b6baa;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    position: relative;
+    user-select: none;
+    transform-origin: center center;
+  }
+  button:hover {
+    background-color: #ff8787;
+  }
+  #yesBtn {
+    background-color: #4caf50;
+    box-shadow: 0 0 15px #4caf5088;
+    transform: scale(1);
+  }
+  #yesBtn:hover {
+    background-color: #66bb6a;
+  }
+</style>
+</head>
+<body>
+  <h1>Mga ligo natag dagat guys - janjan</h1>
+  <div class="buttons">
+    <button id="yesBtn">Tara</button>
+    <button id="noBtn">Dili ko</button>
+  </div>
+
+<script>
+  const noBtn = document.getElementById('noBtn');
+  const yesBtn = document.getElementById('yesBtn');
+  const padding = 20; // padding from edges for button repositioning
+
+  let dodgeCount = 0;
+  let yesScale = 1;
+
+  // Function to set the 'No' button position randomly inside viewport
+  function moveNoButton() {
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    let newX = Math.random() * (windowWidth - btnWidth - padding * 2) + padding;
+    let newY = Math.random() * (windowHeight - btnHeight - padding * 2) + padding;
+
+    noBtn.style.position = 'fixed';
+    noBtn.style.left = `${newX}px`;
+    noBtn.style.top = `${newY}px`;
+
+    dodgeCount++;
+    if (dodgeCount % 5 === 0) {
+      yesScale += 0.2; // Increase scale by 0.2 every 5 dodges
+      yesBtn.style.transform = `scale(${yesScale.toFixed(2)})`;
+    }
+  }
+
+  function isCursorNearButton(event) {
+    const btnRect = noBtn.getBoundingClientRect();
+    const cursorX = event.clientX;
+    const cursorY = event.clientY;
+    const threshold = 80; // pixels
+
+    return !(cursorX < btnRect.left - threshold || 
+             cursorX > btnRect.right + threshold ||
+             cursorY < btnRect.top - threshold ||
+             cursorY > btnRect.bottom + threshold);
+  }
+
+  // When mouse moves over the "No" button or near it, move it away
+  document.addEventListener('mousemove', (event) => {
+    if (isCursorNearButton(event)) {
+      moveNoButton();
+    }
+  });
+
+  // Also move the button on window resize to keep it in bounds
+  window.addEventListener('resize', () => {
+    // Reset position to initial center
+    noBtn.style.position = '';
+    noBtn.style.left = '';
+    noBtn.style.top = '';
+  });
+
+  // Yes button feedback on click
+  yesBtn.addEventListener('click', () => {
+    alert('Nayss 😄');
+  });
+
+  // Initially center buttons
+  window.onload = () => {
+    noBtn.style.position = '';
+    noBtn.style.left = '';
+    noBtn.style.top = '';
+    yesBtn.style.transform = 'scale(1)';
+    dodgeCount = 0;
+    yesScale = 1;
+  };
+</script>
+</body>
+</html>
